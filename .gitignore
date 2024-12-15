@@ -2,7 +2,6 @@
 
 # editor directories and files
 .idea
-.vscode
 
 # dependencies
 node_modules
