@@ -1,5 +1,6 @@
 ---
 outline: deep
+title: 'Git 提交规范'
 ---
 
 # Git 提交规范

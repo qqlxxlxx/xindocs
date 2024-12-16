@@ -1,5 +1,6 @@
 import { basename } from 'node:path'
 import { defineConfig } from 'vitepress'
+import { generateSidebar } from '../../utils'
 
 const BASE_PATH = basename(process.env.npm_package_name || '')
 const APP_BASE_PATH = BASE_PATH ? `/${BASE_PATH}/` : '/'
@@ -19,27 +20,23 @@ export default defineConfig({
       { text: '首页', link: '/' },
       {
         text: '前端工程化',
-        items: [
-          {
-            text: '编程规范',
-            items: [
-              {
-                text: 'Git 提交规范',
-                link: '/engine/specifications/gitcommit',
-              },
-            ],
-          },
-          { text: '性能优化', link: '/engine/performance/' },
-          { text: '自动化', link: '/engine/automation/' },
-        ],
-      },
-      {
-        text: '工具/方法',
-        link: '/utils/library',
+        link: '/engine/specifications/gitcommit',
+        // items: [
+        //   {
+        //     text: '编程规范',
+        //     link: '/engine/specifications/gitcommit',
+        //   },
+        //   { text: '性能优化', link: '/engine/performance/' },
+        //   { text: '自动化', link: '/engine/automation/' },
+        // ],
       },
       {
         text: '笔记',
         link: '/notes/',
+      },
+      {
+        text: '工具/方法',
+        link: '/utils/library',
       },
     ],
     // 右侧大纲配置
@@ -47,25 +44,7 @@ export default defineConfig({
       level: 'deep',
       label: '目录',
     },
-    sidebar: {
-      '/engine': [
-        {
-          items: [
-            { text: 'Git 提交规范', link: '/engine/specifications/gitcommit' },
-            { text: '性能优化', link: '/engine/performance/' },
-            { text: '自动化', link: '/engine/automation/' },
-          ],
-        },
-      ],
-      '/utils': [
-        {
-          items: [
-            { text: '工具库整理', link: '/utils/library' },
-            { text: '代码片段', link: '/utils/snippets' },
-          ],
-        },
-      ],
-    },
+    sidebar: generateSidebar(),
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/qqlxxlxx/xindocs' },

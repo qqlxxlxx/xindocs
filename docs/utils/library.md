@@ -1,5 +1,6 @@
 ---
 outline: [2, 3]
+title: 工具库整理
 # description: 收集个人使用过或遇到的JavaScript工具库
 ---
 
