@@ -2,6 +2,13 @@ import { basename } from 'node:path'
 import { defineConfig } from 'vitepress'
 import { generateSidebar } from '../../utils'
 
+// 映射目录名称到中文标题
+const titleMap: Record<string, string> = {
+  specifications: '项目规范',
+  performance: '性能优化',
+  automation: '自动化',
+}
+
 const BASE_PATH = basename(process.env.npm_package_name || '')
 const APP_BASE_PATH = BASE_PATH ? `/${BASE_PATH}/` : '/'
 
@@ -21,14 +28,6 @@ export default defineConfig({
       {
         text: '前端工程化',
         link: '/engine/specifications/gitcommit',
-        // items: [
-        //   {
-        //     text: '编程规范',
-        //     link: '/engine/specifications/gitcommit',
-        //   },
-        //   { text: '性能优化', link: '/engine/performance/' },
-        //   { text: '自动化', link: '/engine/automation/' },
-        // ],
       },
       {
         text: '笔记',
@@ -44,7 +43,7 @@ export default defineConfig({
       level: 'deep',
       label: '目录',
     },
-    sidebar: generateSidebar(),
+    sidebar: generateSidebar(titleMap),
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/qqlxxlxx/xindocs' },

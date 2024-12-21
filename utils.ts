@@ -3,14 +3,9 @@ import fs from 'fs'
 import matter from 'gray-matter'
 import type { DefaultTheme } from 'vitepress'
 
-// 映射目录名称到中文标题
-const titleMap: Record<string, string> = {
-  specifications: '编程规范',
-  performance: '性能优化',
-  automation: '自动化',
-}
-
-export const generateSidebar = (): DefaultTheme.SidebarMulti => {
+export const generateSidebar = (
+  titleMap: Record<string, string> = {}
+): DefaultTheme.SidebarMulti => {
   const sidebar: DefaultTheme.SidebarMulti = {}
 
   // 假设你有一个 docs 目录
