@@ -5,9 +5,9 @@ title: 'Git 提交规范'
 
 # Git 提交规范
 
-代码规范与最佳实践
+代码格式规范和 git 提交规范的最佳实践
 
-- 代码风格和统一规范（Prettier、ESLint、styleLint）
+- 代码风格和统一规范（Prettier、ESLint、Stylelint）
 - 规范提交信息（husky、lint-staged、commitlint、czg、cz-git ）
 
 ## Git 提交信息前缀
@@ -38,6 +38,8 @@ chore: 更新依赖并修复bug
 
 ## Git 提交规范配置
 
+> [commitlint 网站](https://commitlint.js.org/)
+
 在前端项目中配置 Git 提交规范，可以通过一些工具和配置文件来自动化和规范化 Git 提交信息，确保团队成员遵循统一的提交规范。最常见的做法是使用 Commitlint 和 Husky，这两个工具能够帮助你在提交代码时自动检查提交信息是否符合规范。
 
 在 Git 中使用 Husky 来配置提交前缀规范，你需要按照以下步骤操作：
@@ -51,9 +53,9 @@ chore: 更新依赖并修复bug
 
 以下是一个简单的.commitlintrc.json 配置示例，它定义了提交消息的类型规则(使用 Conventional Commits 规范来检查提交信息，例如类型（type）、作用（scope）和主题（subject）的规范。)：
 
-```plain
+```json
 {
-  extends: ['@commitlint/config-conventional'],
+  "extends": ["@commitlint/config-conventional"]
 }
 ```
 
@@ -84,9 +86,54 @@ npx --no-install commitlint --edit "$1"
 
 这样配置后，只要你使用 git commit 命令进行提交，Husky 会调用 Commitlint 工具检查你的提交信息是否符合.commitlintrc.json 中定义的规范。如果不符合规范，commit 将会被拒绝。
 
-## 生成标准化规范化的 commit message
+## 添加 git commit 辅助备注信息
 
-[cz-git](https://cz-git.qbb.sh/zh/guide/)
+> [cz-git](https://cz-git.qbb.sh/zh/guide/) 一款工程性更强，轻量级，高度自定义，标准输出格式的 commitizen 适配器
+
+在上面虽然定义了很多提交类型，但都是英文前缀，不容易记忆，可以添加辅助信息在我们提交代码的时候做选择，会方便很多，可以借助**commitizen**来实现这个功能。
+
+1. 安装依赖
+
+全局安装 commitizen，否则无法执行插件的 cz 或 git cz 命令：
+
+```bash
+npm install -g commitizen
+```
+
+在项目内安装 cz-git
+
+```bash
+npm install -D cz-git
+```
+
+2. 修改 package.json 添加 config 指定使用的适配器
+
+```json
+{
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
+  }
+}
+```
+
+3. 添加自定义配置(可选，使用默认)
+
+cz-git 与 commitlint 进行联动给予校验信息，所以可以编写于 commitlint 配置文件之中。
+
+例如: [(⇒ 配置模板)](https://cz-git.qbb.sh/zh/config/)
+
+```js
+// .commitlintrc.cjs
+/** @type {import('cz-git').UserConfig} */
+module.exports = {
+  prompt: {
+    useEmoji: true,
+    // option...
+  },
+}
+```
 
 ## Git 提交时自动修复代码
 
@@ -107,8 +154,13 @@ npx --no-install commitlint --edit "$1"
 - `eslint-config-prettier`：禁用与 Prettier 冲突的 ESLint 规则，确保它们的配置不会相互干扰。
 - `eslint-plugin-prettier`：将 Prettier 作为 ESLint 规则运行，确保格式化和代码质量的一致性。
 - `eslint-plugin-vue`：可选，为 Vue 3 项目提供特定的 ESLint 规则，确保 Vue 代码的质量。
+- `stylelint`: 用来检查 CSS、SCSS、LESS 等样式代码。
 
 ### 2. 配置 Husky
+
+- husky: 可以监听 githooks 执行，在对应 hook 执行阶段做一些处理的操作。
+- pre-commit：githooks 之一， 在 commit 提交前使用 tsc 和 eslint 对语法进行检测。
+- commit-msg：githooks 之一，在 commit 提交前对 commit 备注信息进行检测。
 
 `husky` 用于在 Git 提交时触发 `lint-staged` 的操作。你需要在项目中启用 Husky 钩子。
 
@@ -171,7 +223,7 @@ module.exports = {
 
 通过这种配置，在开发过程中，你可以确保所有提交的代码都符合一致的风格和质量标准，从而提高代码的可维护性和一致性。
 
-### 4. 配置 ESLint 和 Prettier
+### 4. 配置 ESLint、Prettier 和 Stylelint
 
 如果你还没有设置 ESLint 和 Prettier，可以按以下步骤进行配置：
 
@@ -217,7 +269,48 @@ npm install --save-dev eslint-config-prettier eslint-plugin-prettier
 
 这样，Prettier 会作为 ESLint 的一部分运行，确保代码风格一致性。
 
-### 5. 测试
+#### 配置 Stylelint
+
+1. 在项目根目录创建 `.stylelintrc` 文件，用于定义 Stylelint 的规则。例如：
+
+```json
+{
+  "extends": ["stylelint-config-standard"], // Stylelint 官方提供的一组默认规则配置
+  "rules": {
+    "indentation": 2,
+    "max-line-length": 80
+  }
+}
+```
+
+### 5. editorconfig 统一编辑器配置
+
+由于每个人的 vsocde 编辑器默认配置可能不一样，比如有的默认缩进是 4 个空格，有的是 2 个空格，如果自己编辑器和项目代码缩进不一样，会给开发和项目代码规范带来一定影响，所以需要在项目中为编辑器配置下格式。
+
+5.1 安装 vscode 插件 EditorConfig
+
+打开 vsocde 插件商店，搜索 EditorConfig for VS Code，然后进行安装。
+
+5.2 添加.editorconfig 配置文件
+
+```bash
+root = true # 控制配置文件 .editorconfig 是否生效的字段
+​
+[**] # 匹配全部文件
+indent_style = space # 缩进风格，可选space｜tab
+indent_size = 2 # 缩进的空格数
+charset = utf-8 # 设置字符集
+trim_trailing_whitespace = true # 删除一行中的前后空格
+insert_final_newline = true # 设为true表示使文件以一个空白行结尾
+end_of_line = lf
+​
+[**.md] # 匹配md文件
+trim_trailing_whitespace = false
+```
+
+上面的配置可以规范本项目中文件的缩进风格，和缩进空格数等，会覆盖 vscode 的配置，来达到不同编辑器中代码默认行为一致的作用。
+
+### 6. 测试
 
 在配置好所有内容之后，你可以测试是否正常工作。尝试修改一个文件并使用 Git 提交：
 

@@ -30,8 +30,12 @@ export default defineConfig({
         link: '/engine/specifications/gitcommit',
       },
       {
+        text: '性能优化',
+        link: '/performance/preload',
+      },
+      {
         text: '笔记',
-        link: '/notes/',
+        link: '/notes/githubpages',
       },
       {
         text: '工具/方法',
